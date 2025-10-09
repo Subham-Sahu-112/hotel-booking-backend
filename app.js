@@ -3,6 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const vendorRoutes = require("./Routes/VenderRouter");
+const customerRoutes = require("./Routes/CustomerRouter");
 const hotelRoutes = require("./Routes/hotelRoutes");
 const Hotel = require("./models/Hotel");
 
@@ -11,8 +12,10 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors());
+
 // Routes
 app.use("/vender", vendorRoutes);
+app.use("/customer", customerRoutes);
 app.use("/hotels", hotelRoutes);
 
 // MongoDB Connection

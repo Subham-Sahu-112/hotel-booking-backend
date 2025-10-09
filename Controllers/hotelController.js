@@ -60,4 +60,61 @@ const createHotel = async (req, res) => {
   }
 };
 
-module.exports = { createHotel };
+// Get hotel by ID
+const getHotelById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Find hotel by ID
+    const hotel = await Hotel.findById(id);
+    
+    if (!hotel) {
+      return res.status(404).json({ message: "Hotel not found" });
+    }
+    
+    res.status(200).json({ hotel });
+  } catch (error) {
+    console.error("Error fetching hotel:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// Get all hotels (if not already exists)
+const getAllHotels = async (req, res) => {
+  try {
+    const hotels = await Hotel.find({});
+    res.status(200).json(hotels);
+  } catch (error) {
+    console.error("Error fetching hotels:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// Update hotel by ID
+const updateHotel = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateData = req.body;
+
+    // Find and update hotel
+    const updatedHotel = await Hotel.findByIdAndUpdate(
+      id,
+      updateData,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedHotel) {
+      return res.status(404).json({ message: "Hotel not found" });
+    }
+
+    res.status(200).json({ 
+      message: "Hotel updated successfully", 
+      hotel: updatedHotel 
+    });
+  } catch (error) {
+    console.error("Error updating hotel:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+module.exports = { createHotel, getHotelById, getAllHotels, updateHotel };
