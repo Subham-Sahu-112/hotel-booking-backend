@@ -5,6 +5,10 @@ const cors = require("cors");
 const vendorRoutes = require("./Routes/VenderRouter");
 const customerRoutes = require("./Routes/CustomerRouter");
 const hotelRoutes = require("./Routes/hotelRoutes");
+const bookingRoutes = require("./Routes/BookingRouter");
+const vendorBookingRoutes = require("./Routes/VendorBookingRouter");
+const adminRoutes = require("./Routes/AdminRouter");
+const categoryRoutes = require("./Routes/CategoryRouter");
 const Hotel = require("./models/Hotel");
 
 const app = express();
@@ -17,6 +21,10 @@ app.use(cors());
 app.use("/vender", vendorRoutes);
 app.use("/customer", customerRoutes);
 app.use("/hotels", hotelRoutes);
+app.use("/bookings", bookingRoutes);
+app.use("/vendor/bookings", vendorBookingRoutes);
+app.use("/admin", adminRoutes);
+app.use("/categories", categoryRoutes);
 
 // MongoDB Connection
 const PORT = process.env.PORT || 5000;

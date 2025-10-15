@@ -8,6 +8,16 @@ const roomTypeSchema = new mongoose.Schema({
 
 const hotelSchema = new mongoose.Schema(
   {
+    vendor: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Vendor",
+      required: false // Make optional for backward compatibility with existing hotels
+    },
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      required: false // Make optional for backward compatibility
+    },
     basicInfo: {
       hotelName: { type: String, required: true },
       description: { type: String },

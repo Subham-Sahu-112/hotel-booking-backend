@@ -3,6 +3,9 @@ const Hotel = require("../models/Hotel");
 
 const createHotel = async (req, res) => {
   try {
+    // Get vendor ID from authenticated request (if using vendor middleware)
+    const vendorId = req.vendor?.vendorId || req.body.vendorId;
+    
     // Parse JSON fields
     const basicInfo = JSON.parse(req.body.basicInfo || "{}");
     const contactInfo = JSON.parse(req.body.contactInfo || "{}");
@@ -42,6 +45,7 @@ const createHotel = async (req, res) => {
 
     // Create hotel document
     const hotel = new Hotel({
+      vendor: vendorId || null, // Add vendor ID if available
       basicInfo,
       contactInfo,
       amenities,

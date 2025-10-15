@@ -1,5 +1,6 @@
 const Vendor = require("../models/Vender");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const registerVendor = async (req, res) => {
   try {
@@ -79,4 +80,57 @@ const registerVendor = async (req, res) => {
   }
 };
 
-module.exports = { registerVendor };
+const vendorLogin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Validate input
+    if (!email || !password) {
+      return res.status(400).json({ message: "Please enter all required fields" });
+    }
+
+    // Check if vendor exists
+    const vendor = await Vendor.findOne({ emailAddress: email });
+    if (!vendor) {
+      return res.status(400).json({ message: "Vendor not found. Please register first." });
+    }
+
+    // Compare password
+    const isMatch = await bcrypt.compare(password, vendor.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid password" });
+    }
+
+    // Create JWT Token
+    const token = jwt.sign(
+      { 
+        id: vendor._id, 
+        vendorId: vendor._id,
+        supplierId: vendor._id,
+        email: vendor.emailAddress,
+        type: 'supplier' // or 'vendor' - matches middleware check
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" } // token valid for 7 days
+    );
+
+    // Send response
+    res.status(200).json({
+      success: true,
+      message: "Login successful",
+      token,
+      vendor: {
+        id: vendor._id,
+        businessName: vendor.businessName,
+        contactName: vendor.contactName,
+        emailAddress: vendor.email,
+        phoneNumber: vendor.phoneNumber,
+      },
+    });
+  } catch (error) {
+    console.error("Error logging in vendor:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+module.exports = { registerVendor, vendorLogin };
