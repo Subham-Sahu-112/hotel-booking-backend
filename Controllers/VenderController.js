@@ -86,19 +86,28 @@ const vendorLogin = async (req, res) => {
 
     // Validate input
     if (!email || !password) {
-      return res.status(400).json({ message: "Please enter all required fields" });
+      return res.status(400).json({ 
+        success: false,
+        message: "Please enter all required fields" 
+      });
     }
 
     // Check if vendor exists
     const vendor = await Vendor.findOne({ emailAddress: email });
     if (!vendor) {
-      return res.status(400).json({ message: "Vendor not found. Please register first." });
+      return res.status(400).json({ 
+        success: false,
+        message: "Vendor not found. Please register first." 
+      });
     }
 
     // Compare password
     const isMatch = await bcrypt.compare(password, vendor.password);
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid password" });
+      return res.status(401).json({ 
+        success: false,
+        message: "Invalid password" 
+      });
     }
 
     // Create JWT Token
@@ -133,7 +142,11 @@ const vendorLogin = async (req, res) => {
     });
   } catch (error) {
     console.error("Error logging in vendor:", error);
-    res.status(500).json({ message: "Server error", error: error.message });
+    res.status(500).json({ 
+      success: false,
+      message: "Server error", 
+      error: error.message 
+    });
   }
 };
 
