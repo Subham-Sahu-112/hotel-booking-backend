@@ -251,7 +251,7 @@ const loginCustomer = async (req, res) => {
         type: 'customer'
       },
       process.env.JWT_SECRET || 'hotel_booking_secret_key',
-      { expiresIn: '7d' }
+      { expiresIn: '30d' }
     );
 
     // Remove password from response
@@ -265,6 +265,8 @@ const loginCustomer = async (req, res) => {
         token
       }
     });
+
+    console.log(`Customer data returned: ${JSON.stringify(customerData)}`);
 
   } catch (error) {
     console.error("Error logging in customer:", error);

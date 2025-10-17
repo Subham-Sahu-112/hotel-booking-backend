@@ -114,18 +114,22 @@ const vendorLogin = async (req, res) => {
       { expiresIn: "7d" } // token valid for 7 days
     );
 
-    // Send response
+    // Send response with consistent structure
+    const vendorData = {
+      id: vendor._id,
+      businessName: vendor.businessName,
+      contactName: vendor.contactName,
+      emailAddress: vendor.emailAddress,
+      phoneNumber: vendor.phoneNumber,
+    };
+
     res.status(200).json({
       success: true,
       message: "Login successful",
-      token,
-      vendor: {
-        id: vendor._id,
-        businessName: vendor.businessName,
-        contactName: vendor.contactName,
-        emailAddress: vendor.email,
-        phoneNumber: vendor.phoneNumber,
-      },
+      data: {
+        vender: vendorData,
+        token
+      }
     });
   } catch (error) {
     console.error("Error logging in vendor:", error);
